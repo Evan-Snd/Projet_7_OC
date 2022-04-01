@@ -9,6 +9,7 @@ def define_all_possible_combinations(actions, argent_initial, param):
     cur_comb0 = []
     func_recursive(res, cur_comb0, actions, argent_initial, param)
 
+    print(len(res))
     return res
 
 
@@ -90,7 +91,7 @@ def compute_combinaison_name(comb, actions):
 
 
 full_actions = {}
-reader = csv.DictReader(open(r"C:\Users\sinda\OneDrive\Bureau\FormationPython\dataset2_Python+P7.csv"))
+reader = csv.DictReader(open(r"C:\Users\sinda\OneDrive\Bureau\FormationPython\P7_sinda_evan\data.csv"))
 i = 0
 
 for raw in reader:
@@ -129,6 +130,8 @@ print(
         best_benefit))
 end = time.time()
 print("The time of execution of above program is :", end - start)
+'''''
 from guppy import hpy
 h = hpy()
 print(h.heap())
+'''''

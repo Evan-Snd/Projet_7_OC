@@ -1,5 +1,5 @@
 import time
-import json
+import csv
 
 
 def define_all_possible_combinations(actions, argent_initial):
@@ -14,7 +14,7 @@ def define_all_possible_combinations(actions, argent_initial):
 def func_recursive(res, previous_comb, actions, argent_initial):
     # Loop on each action
     index_beg = previous_comb[-1] + 1 if len(previous_comb) > 0 else 1
-    for index in range(index_beg, 25):
+    for index in range(index_beg, 21):
         # Build possible combination
         cur_comb = list(previous_comb)
         cur_comb.append(index)
@@ -46,29 +46,31 @@ def compute_combination_benefit(comb, actions):
     return comb_benefit
 
 
-if __name__ == '__main__':
+actions = {}
+reader = csv.DictReader(open(r"C:\Users\sinda\OneDrive\Bureau\FormationPython\P7_sinda_evan\data.csv"))
+i = 0
 
-    with open('data.json') as mon_fichier:
-        actions_json = json.load(mon_fichier)
+for raw in reader:
+    i += 1
+    actions[i] = {'name': raw['name'], 'Cost': float(raw['price']), 'Benefice': float(raw['profit'])}
 
-    actions = {int(k): actions_json[k] for k in actions_json}
+print(actions)
+argent_initial = 500
 
-    argent_initial = 500
+# Define all possible combination
+start = time.time()
+possible_combination = define_all_possible_combinations(actions, argent_initial)
 
-    # Define all possible combination
-    start = time.time()
-    possible_combination = define_all_possible_combinations(actions, argent_initial)
+# Compute the benefit af each combination
+combination_benefits = []
+for combinaison in possible_combination:
+    benefit = compute_combination_benefit(combinaison, actions)
+    combination_benefits.append((combinaison, benefit))
+best_comb_and_benefit = max(combination_benefits, key=lambda x: x[1])
 
-    # Compute the benefit af each combination
-    combination_benefits = []
-    for combinaison in possible_combination:
-        benefit = compute_combination_benefit(combinaison, actions)
-        combination_benefits.append((combinaison, benefit))
-    best_comb_and_benefit = max(combination_benefits, key=lambda x: x[1])
-
-    # Define the best combination with highest benefit
-    best_comb = best_comb_and_benefit[0]
-    best_benefit = best_comb_and_benefit[1]
-    print("La meilleure combinaison d'action est : " + str(best_comb) + " avec un benefice de : " + str(best_benefit))
-    end = time.time()
-    print("The time of execution of above program is :", end - start)
+# Define the best combination with highest benefit
+best_comb = best_comb_and_benefit[0]
+best_benefit = best_comb_and_benefit[1]
+print("La meilleure combinaison d'action est : " + str(best_comb) + " avec un benefice de : " + str(best_benefit))
+end = time.time()
+print("The time of execution of above program is :", end - start)
